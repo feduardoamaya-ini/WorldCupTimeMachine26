@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Ticket Verification</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            min-height: 100vh;
+            /* Usa la imagen cargada como fondo general */
+            background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('background.png');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: #333333;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 28px;
+            padding: 40px 25px;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+            margin: auto;
+        }
+
+        .logo-container img {
+            width: 100%;
+            max-width: 280px;
+            height: auto;
+            margin-bottom: 25px;
+        }
+
+        /* Icono de verificación verde */
+        .check-icon {
+            width: 75px;
+            height: 75px;
+            background-color: #2ec4b6;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto 20px;
+            font-size: 2.5rem;
+            color: white;
+            box-shadow: 0 0 20px rgba(46, 196, 182, 0.4);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(0.96); box-shadow: 0 0 0 0 rgba(46, 196, 182, 0.6); }
+            70% { transform: scale(1); box-shadow: 0 0 0 12px rgba(46, 196, 182, 0); }
+            100% { transform: scale(0.96); box-shadow: 0 0 0 0 rgba(46, 196, 182, 0); }
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            color: #111;
+            margin-bottom: 12px;
+            font-weight: 700;
+        }
+
+        .message {
+            font-size: 0.95rem;
+            color: #666;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+
+        .divider {
+            border: none;
+            border-top: 1px solid #e0e0e0;
+            margin: 20px 0;
+        }
+
+        .verification-title {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #999;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .time-display {
+            font-size: 0.9rem;
+            color: #444;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        /* Contador Estilo Odométrico / Marcador */
+        .counter-container {
+            display: flex;
+            justify-content: center;
+            gap: 4px;
+            margin-top: 10px;
+        }
+
+        .counter-digit {
+            background: #222222;
+            color: #ffffff;
+            font-size: 1.4rem;
+            font-weight: bold;
+            padding: 6px 10px;
+            border-radius: 6px;
+            box-shadow: inset 0 -3px 0 rgba(255,255,255,0.2);
+        }
+
+        footer {
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.8);
+            text-shadow: 0 1px 4px rgba(0,0,0,0.5);
+            margin-top: 20px;
+            line-height: 1.4;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="logo-container">
+            <img src="logo.png" alt="The World Cup Time Machine">
+        </div>
+
+        <div class="check-icon">✓</div>
+
+        <h1>Congratulations! Your Ticket is Original!</h1>
+        <p class="message">You have successfully verified your access code for the school event. This ticket is valid for one entry.</p>
+
+        <hr class="divider">
+
+        <div class="verification-title">Event Verification</div>
+        <div class="time-display" id="liveTime">Loading date & time...</div>
+
+        <div class="verification-title">Total Site Visits</div>
+        <div class="counter-container" id="counterBox">
+            <div class="counter-digit">0</div>
+            <div class="counter-digit">0</div>
+            <div class="counter-digit">0</div>
+            <div class="counter-digit">2</div>
+            <div class="counter-digit">4</div>
+            <div class="counter-digit">7</div>
+        </div>
+    </div>
+
+    <footer>
+        <p>This verification page is for original tickets only. Scan the QR code on your ticket to access it.</p>
+        <p>Powered by School Event Verification Services.</p>
+    </footer>
+
+    <script>
+        // Actualizar fecha y hora actual dinámicamente
+        function updateDateTime() {
+            const now = new Date();
+            const options = { day: '2-digit', month: 'short', year: 'numeric' };
+            const dateStr = now.toLocaleDateString('en-US', options);
+            const timeStr = now.toTimeString().split(' ')[0];
+            
+            document.getElementById('liveTime').textContent = `Validated on: ${dateStr} - ${timeStr}`;
+        }
+        setInterval(updateDateTime, 1000);
+        updateDateTime();
+
+        // Simulación de Contador de Visitas Persistente/Incremental
+        function generateCounter() {
+            // Base inicial fija para que parezca un evento con movimiento
+            let baseVisits = 482; 
+            
+            // Añade un extra aleatorio simulado basado en los minutos actuales para que varíe en cada teléfono
+            const minutesFactor = new Date().getMinutes() * 3 + new Date().getSeconds();
+            const totalVisits = String(baseVisits + minutesFactor).padStart(6, '0');
+            
+            const counterBox = document.getElementById('counterBox');
+            counterBox.innerHTML = ''; // Limpiar dígitos por defecto
+            
+            // Renderizar los cuadritos del contador
+            for (let digit of totalVisits) {
+                const digitDiv = document.createElement('div');
+                digitDiv.className = 'counter-digit';
+                digitDiv.textContent = digit;
+                counterBox.appendChild(digitDiv);
+            }
+        }
+        generateCounter();
+    </script>
+</body>
+</html>
